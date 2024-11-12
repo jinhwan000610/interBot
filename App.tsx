@@ -1,117 +1,64 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Header from './src/pages/header';
+import Footer from './src/pages/footer';
+import MainPage from './src/pages/mainPage';
+import SelectJob from './src/pages/selectJob';
+import CodingLevel from './src/pages/codingLevel';
+import CodingTest from './src/pages/codingTest';
+import InterviewChang from './src/pages/interviewChang'; // 수정된 이름
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// RootStackParamList 타입을 export하여 다른 파일에서도 사용 가능하게 함
+export type RootStackParamList = {
+  MainPage: undefined;
+  SelectJob: undefined;
+  CodingLevel: undefined;
+  CodingTest: undefined;
+  InterviewChang: undefined;
+};
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    <NavigationContainer>
+      <View style={styles.appContainer}>
+        {/* 헤더는 항상 페이지 상단에 위치 */}
+        <SafeAreaView style={styles.headerContainer}>
+          <StatusBar barStyle="dark-content" />
+          <Header />
+        </SafeAreaView>
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        {/* Stack.Navigator는 화면 전환만 담당 */}
+        <View style={styles.navigatorContainer}>
+          <Stack.Navigator initialRouteName="MainPage" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MainPage" component={MainPage} />
+            <Stack.Screen name="SelectJob" component={SelectJob} />
+            <Stack.Screen name="CodingLevel" component={CodingLevel} />
+            <Stack.Screen name="CodingTest" component={CodingTest} />
+            <Stack.Screen name="InterviewChang" component={InterviewChang} />
+          </Stack.Navigator>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        {/* 푸터는 항상 페이지 하단에 위치 */}
+        <Footer />
+      </View>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  appContainer: {
+    flex: 1, // 화면 전체를 차지하게 설정
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  headerContainer: {
+    flex: 0, // 헤더는 고정
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  navigatorContainer: {
+    flex: 1, // Stack.Navigator는 중간 영역을 차지
   },
 });
 
