@@ -1,25 +1,46 @@
-// App.tsx
-
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
+
 import Header from './src/pages/header';
 import Footer from './src/pages/footer';
-import CodingTest from './src/pages/codingTest';
+import MainPage from './src/pages/mainPage';
+import SelectJob from './src/pages/selectJob';
 
-function App(): React.JSX.Element {
+// RootStackParamList 타입을 export하여 다른 파일에서도 사용 가능하게 함
+export type RootStackParamList = {
+  MainPage: undefined;
+  SelectJob: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Header />
-      <CodingTest />
-      <Footer />
-    </SafeAreaView>
+    <NavigationContainer>
+      <View style={styles.appContainer}>
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle="dark-content" />
+          <Header />
+          <Stack.Navigator initialRouteName="MainPage" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MainPage" component={MainPage} />
+            <Stack.Screen name="SelectJob" component={SelectJob} />
+          </Stack.Navigator>
+        </SafeAreaView>
+        <Footer />
+      </View>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  appContainer: {
     flex: 1,
-    backgroundColor: '#fff', // 배경색을 원하는 대로 설정할 수 있습니다.
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
   },
 });
 
