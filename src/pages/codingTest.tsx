@@ -1,32 +1,68 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown'; // 드롭다운 컴포넌트 사용
 
 const CodingTest = () => {
+  const [value, setValue] = useState<string | null>('JavaScript'); // 기본값으로 'JavaScript' 설정
+
   return (
     <View style={styles.container}>
-      {/* Solution 코드 작성 영역 */}
-      <View style={styles.solutionSection}>
-        <Text style={styles.sectionTitle}>Solution</Text>
-        <ScrollView style={styles.codeInputContainer}>
-          <TextInput
-            style={styles.codeInput}
-            multiline
-            placeholder="여기에 코드를 작성하세요"
-          />
-        </ScrollView>
+      {/* 문제 제목과 타이머, A 버튼 */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.timerText}>🕒 9:59</Text>
+        <Text style={styles.problemTitle}>문제 제목</Text>
+        <TouchableOpacity style={styles.themeButton}>
+          <Text style={styles.themeButtonText}>A</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* 출력 결과 영역 */}
-      <View style={styles.outputSection}>
-        <Text style={styles.sectionTitle}>출력 결과</Text>
-        <View style={styles.outputTextContainer}>
-          <Text style={styles.outputText}>여기에 출력 결과가 표시됩니다.</Text>
-        </View>
-        {/* 작은 제출 버튼 */}
-        <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>제출</Text>
-        </TouchableOpacity>
+      {/* 구분선 */}
+      <View style={styles.separator} />
 
+      {/* 코드 작성 및 실행 결과 영역 */}
+      <View style={styles.combinedSection}>
+        {/* 코드 작성 영역 */}
+        <View style={styles.codeInputContainer}>
+          <ScrollView>
+            <TextInput
+              style={styles.codeInput}
+              multiline
+              placeholder="여기에 코드를 작성하세요"
+            />
+          </ScrollView>
+          <TouchableOpacity style={styles.runButton}>
+            <Text style={styles.buttonText}>코드 실행</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 언어 선택 드롭다운 */}
+        <Dropdown
+          style={styles.dropdown}
+          data={[
+            { label: 'C', value: 'C' },
+            { label: 'C++', value: 'C++' },
+            { label: 'JavaScript', value: 'JavaScript' },
+            { label: 'Python', value: 'Python' },
+            { label: 'Java', value: 'Java' },
+            { label: 'C#', value: 'C#' },
+            // 필요한 언어 추가
+          ]}
+          labelField="label"
+          valueField="value"
+          value={value} // 기본값으로 'JavaScript' 설정
+          onChange={item => setValue(item.value)} // 선택된 값 설정
+          placeholder="언어 선택"
+          onFocus={() => {}}
+          onBlur={() => {}}
+        />
+
+        {/* 실행 결과 영역 */}
+        <View style={styles.outputTextContainer}>
+          <Text style={styles.outputText}>실행 결과가 여기 표시됩니다.</Text>
+          <TouchableOpacity style={styles.submitButton}>
+            <Text style={styles.buttonText}>제출</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -35,63 +71,118 @@ const CodingTest = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
     backgroundColor: '#ffffff',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
-  sectionTitle: {
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  timerText: {
+    fontSize: 16,
+    color: '#333333',
+    position: 'absolute',
+    left: 15,
+  },
+  problemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333333',
-    marginBottom: 8,
+    textAlign: 'center',
   },
-  solutionSection: {
+  themeButton: {
+    position: 'absolute',
+    right: 15,
+    backgroundColor: '#E6E6FA',
+    padding: 5,
+    borderRadius: 5,
+  },
+  themeButtonText: {
+    fontSize: 16,
+    color: '#7B68EE',
+    fontWeight: 'bold',
+  },
+  separator: {
+    width: '90%',
+    height: 1,
+    backgroundColor: '#DDDDDD',
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  combinedSection: {
     backgroundColor: '#E6E6FA',
     padding: 15,
     borderRadius: 10,
-    marginBottom: 15,
-    height: 250,
+    height: 50,
+    width: '90%',
+    position: 'relative',
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: 100,
   },
   codeInputContainer: {
-    flex: 1,
     backgroundColor: '#ffffff',
     borderRadius: 5,
-    padding: 10,
+    padding: 15,
     borderColor: '#dddddd',
     borderWidth: 1,
+    width: '100%',
+    height: 350,
+    marginBottom: 15,
+    position: 'relative',
   },
   codeInput: {
     fontSize: 14,
     color: '#333333',
-    height: 150,
+    height: '100%',
   },
-  outputSection: {
-    backgroundColor: '#E6E6FA',
-    padding: 15,
-    borderRadius: 10,
-    minHeight: 100,
-    marginBottom: 20,
-    position: 'relative', // 제출 버튼 배치용
+  runButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: '#87CEEB',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 120, // 드롭다운의 너비 설정
+    backgroundColor: '#87CEEB', // 제출 버튼과 동일한 색상 적용
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   outputTextContainer: {
     backgroundColor: '#ffffff',
-    padding: 10,
     borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    height: 140,
+    marginBottom: 10,
+    position: 'relative',
   },
   outputText: {
     fontSize: 14,
     color: '#333333',
   },
   submitButton: {
-    backgroundColor: '#87CEEB', // 하늘색 배경
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    position: 'absolute', // 오른쪽 아래 배치
+    position: 'absolute',
     bottom: 10,
     right: 10,
+    backgroundColor: '#87CEEB',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
   },
-  submitButtonText: {
+  buttonText: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',

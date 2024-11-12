@@ -2,12 +2,16 @@
 
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
+import Header from './src/pages/header';
+import Footer from './src/pages/footer';
 import CodingTest from './src/pages/codingTest';
 
 function App(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
+      <Header />
       <CodingTest />
+      <Footer />
     </SafeAreaView>
   );
 }
