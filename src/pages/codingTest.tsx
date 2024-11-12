@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown'; // 드롭다운 컴포넌트 사용
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const CodingTest = () => {
   const [value, setValue] = useState<string | null>('JavaScript'); // 기본값으로 'JavaScript' 설정
+  const [modalVisible, setModalVisible] = useState(false); // 모달 visible 상태
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
 
   return (
     <View style={styles.container}>
@@ -11,7 +16,7 @@ const CodingTest = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.timerText}>🕒 9:59</Text>
         <Text style={styles.problemTitle}>문제 제목</Text>
-        <TouchableOpacity style={styles.themeButton}>
+        <TouchableOpacity style={styles.themeButton} onPress={toggleModal}>
           <Text style={styles.themeButtonText}>A</Text>
         </TouchableOpacity>
       </View>
@@ -24,11 +29,7 @@ const CodingTest = () => {
         {/* 코드 작성 영역 */}
         <View style={styles.codeInputContainer}>
           <ScrollView>
-            <TextInput
-              style={styles.codeInput}
-              multiline
-              placeholder="여기에 코드를 작성하세요"
-            />
+            <TextInput style={styles.codeInput} multiline placeholder="여기에 코드를 작성하세요" />
           </ScrollView>
           <TouchableOpacity style={styles.runButton}>
             <Text style={styles.buttonText}>코드 실행</Text>
@@ -45,15 +46,12 @@ const CodingTest = () => {
             { label: 'Python', value: 'Python' },
             { label: 'Java', value: 'Java' },
             { label: 'C#', value: 'C#' },
-            // 필요한 언어 추가
           ]}
           labelField="label"
           valueField="value"
-          value={value} // 기본값으로 'JavaScript' 설정
+          value={value}
           onChange={item => setValue(item.value)} // 선택된 값 설정
           placeholder="언어 선택"
-          onFocus={() => {}}
-          onBlur={() => {}}
         />
 
         {/* 실행 결과 영역 */}
@@ -64,6 +62,31 @@ const CodingTest = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* 모달 */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* 문제 제목 텍스트 추가 */}
+            <Text style={styles.modalTitle}>문제 제목</Text>
+
+            {/* 모달 내용 영역 */}
+            <View style={styles.modalBody}>
+              <Text style={styles.modalText}>문제의 내용이 여기에 표시됩니다.</Text>
+            </View>
+
+            {/* 닫기 버튼을 모달 하단 가운데로 배치 */}
+            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+              <Text style={styles.buttonText}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -154,8 +177,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 120, // 드롭다운의 너비 설정
-    backgroundColor: '#87CEEB', // 제출 버튼과 동일한 색상 적용
+    width: 120,
+    backgroundColor: '#87CEEB',
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -186,6 +209,51 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+
+  // Modal 스타일
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 배경을 어두운 색으로 처리
+  },
+  modalContent: {
+    width: '80%', // 모달 크기 설정 (너비와 높이)
+    height: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'flex-start', // 상단 정렬
+  },
+  modalTitle: {
+    fontSize: 24, // 크기 크게 설정
+    fontWeight: 'bold',
+    marginBottom: 20, // 아래쪽 여백 추가
+    textAlign: 'center', // 가운데 정렬
+  },
+  modalBody: {
+    width: '110%',
+    height: 475,
+    backgroundColor: '#85A2C3', // 직사각형 배경 색상 설정
+    padding: 5,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  modalText: {
+    fontSize: 18,
+    color: '#E1E9F2', // 흰색 텍스트
+    textAlign: 'center',
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 20, // 버튼을 하단에 배치
+    left: '50%',
+    backgroundColor: '#87CEEB',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
   },
 });
 
