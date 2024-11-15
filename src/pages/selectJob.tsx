@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import CustomText from '../assets/fonts/components/CustomText';
-import { useNavigation } from '@react-navigation/native'; // useNavigation을 가져옵니다.
+import { useNavigation } from '@react-navigation/native'; 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App'; // RootStackParamList 가져오기
+import { RootStackParamList } from '../../App'; 
 
 // 네비게이션 타입 정의
 type SelectJobNavigationProp = StackNavigationProp<RootStackParamList, 'InterviewChang'>;
 
 const SelectJob: React.FC = () => {
-  const navigation = useNavigation<SelectJobNavigationProp>(); // 네비게이션 객체 타입 지정
+  const navigation = useNavigation<SelectJobNavigationProp>();
 
   const jobCategories = [
     { title: 'Android', icon: require('../assets/images/android.png') },
@@ -23,9 +23,8 @@ const SelectJob: React.FC = () => {
     { title: 'Java', icon: require('../assets/images/java.png') },
   ];
 
-  const handleJobSelection = () => {
-    // 모든 버튼 클릭 시 InterviewChang 페이지로 이동
-    navigation.navigate('InterviewChang');
+  const handleJobSelection = (selectedJob: string) => {
+    navigation.navigate('InterviewChang', { selectedJob });
   };
 
   return (
@@ -33,7 +32,7 @@ const SelectJob: React.FC = () => {
       <CustomText style={styles.title}>원하시는 직종을 선택해주세요</CustomText>
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {jobCategories.map((job, index) => (
-          <TouchableOpacity key={index} style={styles.jobButton} onPress={handleJobSelection}>
+          <TouchableOpacity key={index} style={styles.jobButton} onPress={() => handleJobSelection(job.title)}>
             <Image source={job.icon} style={styles.icon} />
             <CustomText style={styles.jobTitle}>{job.title}</CustomText>
           </TouchableOpacity>
