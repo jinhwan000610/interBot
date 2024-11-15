@@ -10,6 +10,9 @@ import SelectJob from './src/pages/selectJob';
 import CodingLevel from './src/pages/codingLevel';
 import CodingTest from './src/pages/codingTest';
 import InterviewChang from './src/pages/interviewChang'; // 수정된 이름
+import CodingEnd from './src/pages/codingEnd';
+import LanguageSelect from './src/pages/LanguageSelect';
+
 
 // RootStackParamList 타입을 export하여 다른 파일에서도 사용 가능하게 함
 export type RootStackParamList = {
@@ -18,6 +21,8 @@ export type RootStackParamList = {
   CodingLevel: undefined;
   CodingTest: undefined;
   InterviewChang: undefined;
+  CodingEnd: undefined;
+  LanguageSelect: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -40,6 +45,8 @@ const App: React.FC = () => {
             <Stack.Screen name="CodingLevel" component={CodingLevel} />
             <Stack.Screen name="CodingTest" component={CodingTest} />
             <Stack.Screen name="InterviewChang" component={InterviewChang} />
+            <Stack.Screen name="CodingEnd" component={CodingEnd} />
+            <Stack.Screen name="LanguageSelect" component={LanguageSelect} />
           </Stack.Navigator>
         </View>
 

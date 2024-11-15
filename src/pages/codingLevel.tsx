@@ -5,13 +5,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App'; // RootStackParamList 가져오기
 
 // 네비게이션 타입 정의
-type CodingLevelNavigationProp = StackNavigationProp<RootStackParamList, 'CodingTest'>;
+type CodingLevelNavigationProp = StackNavigationProp<RootStackParamList, 'LanguageSelect'>;
 
 const CodingLevel: React.FC = () => {
   const navigation = useNavigation<CodingLevelNavigationProp>(); // 네비게이션 객체 타입 지정
 
   const handleLevelSelection = () => {
-    navigation.navigate('CodingTest'); // 'CodingTest'로 이동
+    navigation.navigate('LanguageSelect'); // 'CodingTest'로 이동
   };
 
   return (
