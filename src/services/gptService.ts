@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // OpenAI API 설정
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const OPENAI_API_KEY = 'api key 입력하는곳'; 
+const OPENAI_API_KEY = ''; 
 
 if (!OPENAI_API_KEY) {
   throw new Error('API Key is missing. Please set the OPENAI_API_KEY in your code.');

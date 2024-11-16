@@ -325,14 +325,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   combinedSection: {
-    backgroundColor: '#E6E6FA',
-    padding: 15,
+    backgroundColor: '#E6E0F8',
+    padding: 10,
     borderRadius: 10,
-    width: '90%',
+    width: '95%',
     position: 'relative',
     alignItems: 'center',
     flex: 1,
-    marginBottom: 100,
+    marginBottom: 30,
   },
   codeInputContainer: {
     backgroundColor: '#ffffff',
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     borderColor: '#dddddd',
     borderWidth: 1,
     width: '100%',
-    height: 350,
+    height: 400,
     marginBottom: 15,
   },
   codeInput: {
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   runButton: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 5,
     right: 10,
     backgroundColor: '#87CEEB',
     paddingVertical: 5,
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     position: 'absolute',
-    top: 10,
+    top: 2,
     right: 10,
     width: 120,
     backgroundColor: '#87CEEB',
@@ -393,8 +393,8 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     position: 'absolute',
-    bottom: 10,
-    right: 10,
+    bottom: 20,
+    right: 25,
     backgroundColor: '#87CEEB',
     paddingVertical: 5,
     paddingHorizontal: 15,
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom:20,
   },
   modalText: {
     fontSize: 18,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, Alert, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, Alert, ActivityIndicator, Platform } from 'react-native';
 import { useRoute, RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; // RootStackParamList를 가져옵니다.
 import { fetchInterviewQuestions, fetchInterviewEvaluation } from '../services/gptService';
@@ -24,7 +24,9 @@ export default function InterviewChang() {
   const [responses, setResponses] = useState<string[]>([]); // 사용자 응답 저장
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<'initial' | 'analyzing' | null>('initial'); // 로딩 상태를 더 세분화함
+  const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운을 위해 추가된 상태
+  const [dots, setDots] = useState('.'); // 애니메이션 효과를 위해 추가된 상태
 
   useEffect(() => {
     if (!selectedJob) {
@@ -34,7 +36,6 @@ export default function InterviewChang() {
 
     // 컴포넌트 마운트 시 GPT API 호출하여 질문 가져오기
     const getQuestions = async () => {
-      setLoading(true);
       try {
         console.log('API 요청 시작 - selectedJob:', selectedJob);  // selectedJob 로그 확인
         const fetchedQuestions = await fetchInterviewQuestions(selectedJob); // string[] 타입을 반환
@@ -47,11 +48,44 @@ export default function InterviewChang() {
         console.error('질문을 가져오는 중 오류 발생:', error);
         Alert.alert('오류', '질문을 가져오는 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
       } finally {
-        setLoading(false);
+        setLoading(null); // 질문을 다 가져오면 로딩 종료
+        setCountdown(3); // 로딩 종료 후 카운트다운 시작
       }
     };
     getQuestions();
   }, [selectedJob]);
+
+  // 점의 애니메이션 효과를 위한 useEffect
+  useEffect(() => {
+    if (loading || countdown !== null) {
+      const dotsTimer = setInterval(() => {
+        setDots((prevDots) => {
+          if (prevDots.length >= 3) {
+            return '.';
+          } else {
+            return prevDots + '.';
+          }
+        });
+      }, 500); // 0.5초마다 점 개수 변경
+
+      return () => clearInterval(dotsTimer);
+    }
+  }, [loading, countdown]);
+
+  // 카운트다운이 끝난 후 로딩을 완료하고 면접 시작
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000); // 1초마다 카운트 감소
+
+      return () => clearTimeout(timer);
+    } else {
+      setCountdown(null); // 카운트다운이 끝나면 상태를 null로 설정하여 화면 표시 종료
+    }
+  }, [countdown]);
 
   // 사용자가 메시지를 전송하고 AI 응답을 추가하는 함수
   const handleSendMessage = () => {
@@ -79,14 +113,14 @@ export default function InterviewChang() {
   // 면접 종료 후 피드백 페이지로 이동하는 함수
   const handleFinishInterview = async () => {
     try {
-      setLoading(true);
+      setLoading('analyzing'); // 'analyzing' 상태로 설정하여 로딩 화면에 피드백 분석중 메시지 표시
       const evaluation = await fetchInterviewEvaluation(selectedJob, responses);
       navigation.navigate('Feedback', { evaluation });
     } catch (error) {
       console.error('평가를 가져오는 중 오류 발생:', error);
       Alert.alert('오류', '평가를 가져오는 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
@@ -96,6 +130,36 @@ export default function InterviewChang() {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
+
+  if (loading === 'initial') {
+    // 초기 질문을 로딩 중인 경우, 로딩 화면을 표시
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>인터봇이 질문을 생성중입니다{dots}</Text>
+        <ActivityIndicator size="large" color="#87CEEB" style={styles.activityIndicator} />
+      </View>
+    );
+  }
+
+  if (loading === 'analyzing') {
+    // 피드백을 분석 중인 경우, 로딩 화면을 표시
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>사용자의 답변을 분석중입니다{dots}</Text>
+        <ActivityIndicator size="large" color="#87CEEB" style={styles.activityIndicator} />
+      </View>
+    );
+  }
+
+  if (countdown !== null) {
+    // 카운트다운이 진행 중일 때 카운트다운 화면 표시
+    return (
+      <View style={styles.countdownContainer}>
+        <Text style={styles.countdownText}>면접이 시작됩니다{dots}</Text>
+        <Text style={styles.countdownNumber}>{countdown}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -116,7 +180,6 @@ export default function InterviewChang() {
               {item.sender === 'user' && (
                 <Image source={require('../assets/images/user.png')} style={styles.userImage} />
               )}
-
               {item.sender === 'bot' && (
                 <Image source={require('../assets/images/InterBot.png')} style={styles.botImage} />
               )}
@@ -127,29 +190,26 @@ export default function InterviewChang() {
       </View>
 
       {/* 입력 필드 */}
-      {!loading && (
-        <View style={styles.inputArea}>
-          <TextInput
-  style={[styles.input, Platform.OS === 'android' && { paddingVertical: 0 }]} // Android padding issue fix
-  placeholder="답변을 입력하세요"
-  placeholderTextColor="gray" // Move this prop here
-  value={inputText}
-  onChangeText={(text) => setInputText(text)}
-  onSubmitEditing={handleSendMessage}
-  multiline={true}
-  autoCapitalize="none"
-  autoCorrect={false}
-  keyboardType="default"
-  importantForAccessibility="yes"
-  textContentType="none" // 입력 내용의 타입을 명시적으로 설정
-  editable={true}
-/>
-          <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-            <Text style={styles.sendButtonText}>Send</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {loading && <Text style={styles.loadingText}>응답을 가져오는 중...</Text>}
+      <View style={styles.inputArea}>
+        <TextInput
+          style={[styles.input, Platform.OS === 'android' && { paddingVertical: 0 }]}
+          placeholder="답변을 입력하세요"
+          placeholderTextColor="gray"
+          value={inputText}
+          onChangeText={(text) => setInputText(text)}
+          onSubmitEditing={handleSendMessage}
+          multiline={true}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="default"
+          importantForAccessibility="yes"
+          textContentType="none"
+          editable={true}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+          <Text style={styles.sendButtonText}>Send</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -158,6 +218,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F4F8',
+  },
+  countdownContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F4F8',
+  },
+  countdownText: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  countdownNumber: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#ff6347',
   },
   chatArea: {
     flex: 1,
@@ -187,9 +268,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 12,
     flexDirection: 'row',
-    alignItems: 'flex-start', // 텍스트가 위쪽에 맞춰지도록 설정
-    flexWrap: 'wrap', // 줄바꿈 가능하도록 설정
-    maxWidth: '80%', // 화면 너비의 최대 80%로 설정하여 긴 텍스트 처리
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    maxWidth: '80%',
   },
   chatTextBot: {
     fontSize: 16,
@@ -228,21 +309,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
-  
   },
   input: {
     flex: 1,
     height: 50,
     borderColor: '#e0e0e0',
     borderWidth: 1,
-    borderRadius: 30, // Rounded corners for a more modern look
+    borderRadius: 30,
     paddingHorizontal: 16,
     fontSize: 16,
     backgroundColor: '#ffffff',
   },
   sendButton: {
     backgroundColor: '#4a80f0',
-    paddingVertical: 12, // Adjust button size
+    paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
     marginLeft: 8,
@@ -257,7 +337,11 @@ const styles = StyleSheet.create({
   loadingText: {
     textAlign: 'center',
     marginVertical: 10,
-    color: 'gray',
-   
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#555',
+  },
+  activityIndicator: {
+    marginVertical: 20,
   },
 });

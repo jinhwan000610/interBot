@@ -13,6 +13,7 @@ import InterviewChang from './src/pages/interviewChang'; // 수정된 이름
 import CodingEnd from './src/pages/codingEnd';
 import LanguageSelect from './src/pages/LanguageSelect';
 import Feedback from './src/pages/feedback'; // Feedback 페이지 추가
+import CodingWait from './src/pages/codingWait';
 
 
 // RootStackParamList 타입을 export하여 다른 파일에서도 사용 가능하게 함
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   SelectJob: undefined;
   CodingLevel: undefined;
   CodingTest: undefined;
+  CodingWait: undefined;
 
 
   CodingEnd: undefined;
@@ -50,6 +52,7 @@ const App: React.FC = () => {
             <Stack.Screen name="SelectJob" component={SelectJob} />
             <Stack.Screen name="CodingLevel" component={CodingLevel} />
             <Stack.Screen name="CodingTest" component={CodingTest} />
+            <Stack.Screen name="CodingWait" component={CodingWait} />
             <Stack.Screen name="InterviewChang" component={InterviewChang} />
             <Stack.Screen name="CodingEnd" component={CodingEnd} />
             <Stack.Screen name="Feedback" component={Feedback} />

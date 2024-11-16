@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // useNavigation을 가져옵니다.
+import { useNavigation } from '@react-navigation/native'; 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App'; // RootStackParamList 가져오기
+import { RootStackParamList } from '../../App';
+import LinearGradient from 'react-native-linear-gradient'; // LinearGradient 추가
 
 // 네비게이션 타입 정의
 type CodingLevelNavigationProp = StackNavigationProp<RootStackParamList, 'LanguageSelect'>;
 
 const CodingLevel: React.FC = () => {
-  const navigation = useNavigation<CodingLevelNavigationProp>(); // 네비게이션 객체 타입 지정
+  const navigation = useNavigation<CodingLevelNavigationProp>();
 
   const handleLevelSelection = () => {
-    navigation.navigate('LanguageSelect'); // 'CodingTest'로 이동
+    navigation.navigate('LanguageSelect');
   };
 
   return (
@@ -21,99 +22,124 @@ const CodingLevel: React.FC = () => {
       <View style={styles.separator} />
 
       {/* 첫 번째 난이도 */}
-      <TouchableOpacity 
-        style={styles.levelBox} 
-        onPress={handleLevelSelection}>
-        <Image source={require('../assets/images/level1.png')} style={styles.icon} />
-        <View style={styles.textContainer}>
-          <Text style={styles.levelTitle}>입문자 난이도</Text>
-          <Text style={styles.levelDescription}>
-            코딩을 처음 접해보는 사람들에게 적합한 교육용 난이도예요!
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <LinearGradient 
+        colors={['#ADD8E6', '#5DADE2']} // 연한 하늘색 그라데이션 추가
+        style={styles.levelBoxWrapper}
+      >
+        <TouchableOpacity 
+          style={styles.levelBox} 
+          onPress={handleLevelSelection}>
+          <Image source={require('../assets/images/level1.png')} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.levelTitle}>입문자 난이도</Text>
+            <Text style={styles.levelDescription}>
+              코딩을 처음 접해보는 사람들에게 적합한 교육용 난이도예요!
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
 
       {/* 두 번째 난이도 */}
-      <TouchableOpacity 
-        style={styles.levelBox} 
-        onPress={handleLevelSelection}>
-        <Image source={require('../assets/images/level2.png')} style={styles.icon} />
-        <View style={styles.textContainer}>
-          <Text style={styles.levelTitle}>중급자 난이도</Text>
-          <Text style={styles.levelDescription}>
-            코딩의 기초 개념을 어느 정도 이해하고, 간단한 코드 작성에 익숙해진 사람들에게 추천해요!
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <LinearGradient 
+        colors={['#ADD8E6', '#5DADE2']} // 동일한 연한 하늘색 그라데이션
+        style={styles.levelBoxWrapper}
+      >
+        <TouchableOpacity 
+          style={styles.levelBox} 
+          onPress={handleLevelSelection}>
+          <Image source={require('../assets/images/level2.png')} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.levelTitle}>중급자 난이도</Text>
+            <Text style={styles.levelDescription}>
+              코딩의 기초 개념을 어느 정도 이해하고, 간단한 코드 작성에 익숙해진 사람들에게 추천해요!
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
 
       {/* 세 번째 난이도 */}
-      <TouchableOpacity 
-        style={styles.levelBox} 
-        onPress={handleLevelSelection}>
-        <Image source={require('../assets/images/level3.png')} style={styles.icon} />
-        <View style={styles.textContainer}>
-          <Text style={styles.levelTitle}>숙련자 난이도</Text>
-          <Text style={styles.levelDescription}>
-            기본 개념에 익숙해진 후, 보다 복잡한 코드와 구조적인 사고를 요구하는 단계입니다!
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <LinearGradient 
+        colors={['#ADD8E6', '#5DADE2']} // 동일한 연한 하늘색 그라데이션
+        style={styles.levelBoxWrapper}
+      >
+        <TouchableOpacity 
+          style={styles.levelBox} 
+          onPress={handleLevelSelection}>
+          <Image source={require('../assets/images/level3.png')} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.levelTitle}>숙련자 난이도</Text>
+            <Text style={styles.levelDescription}>
+              기본 개념에 익숙해진 후, 보다 복잡한 코드와 구조적인 사고를 요구하는 단계입니다!
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
 
       {/* 네 번째 난이도 */}
-      <TouchableOpacity 
-        style={styles.levelBox} 
-        onPress={handleLevelSelection}>
-        <Image source={require('../assets/images/level4.png')} style={styles.icon} />
-        <View style={styles.textContainer}>
-          <Text style={styles.levelTitle}>InTerBot 난이도</Text>
-          <Text style={styles.levelDescription}>
-            프로그래밍의 모든 핵심 개념을 숙달하고, 복잡하고 실무에 가까운 문제를 독창적으로 해결할 수 있는 능력을 키우기 위한 단계입니다!
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <LinearGradient 
+        colors={['#ADD8E6', '#5DADE2']} // 동일한 연한 하늘색 그라데이션
+        style={styles.levelBoxWrapper}
+      >
+        <TouchableOpacity 
+          style={styles.levelBox} 
+          onPress={handleLevelSelection}>
+          <Image source={require('../assets/images/level4.png')} style={styles.icon} />
+          <View style={styles.textContainer}>
+            <Text style={styles.levelTitle}>InTerBot 난이도</Text>
+            <Text style={styles.levelDescription}>
+              프로그래밍의 모든 핵심 개념을 숙달하고, 복잡하고 실무에 가까운 문제를 독창적으로 해결할 수 있는 능력을 키우기 위한 단계입니다!
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // 전체 화면을 차지하도록 설정
-    justifyContent: 'flex-start', // 내용이 화면 상단에 오도록 설정
+    flex: 1,
+    justifyContent: 'flex-start',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F0F4F8',
   },
   header: {
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 5, // 선과 가까이 붙이기 위해 여백을 줄임
+    marginBottom: 5,
   },
   separator: {
     height: 1,
-    backgroundColor: '#ddd',
-    marginVertical: 5, // 텍스트와 선 사이의 간격을 최소화
+    width: '100%',
+    backgroundColor: '#868296',
+    marginVertical: 5,
+    marginBottom: 40,
+  },
+  levelBoxWrapper: {
+    marginBottom: 15,
+    borderRadius: 12,
+    overflow: 'hidden', // 그라데이션과 버튼 모서리 일치
+    shadowColor: '#000', // 그림자 색상
+    shadowOffset: { width: 0, height: 5 }, // 그림자 오프셋
+    shadowOpacity: 0.3, // 그림자 투명도
+    shadowRadius: 6.27, // 그림자 반경
+    elevation: 10, // 안드로이드용 그림자 효과
   },
   levelBox: {
     flexDirection: 'row',
-    alignItems: 'center', // 아이콘과 텍스트가 수직 중앙 정렬
-    marginVertical: 10,
+    alignItems: 'center',
     padding: 15,
-    borderRadius: 12,
-    backgroundColor: '#E6E6FA', // 연한 보라색 배경
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5, 
+    backgroundColor: 'transparent', // 그라데이션을 덮지 않도록
   },
   icon: {
-    width: 50, 
+    width: 50,
     height: 50,
-    marginRight: 15, // 아이콘과 텍스트 사이 간격을 추가
+    marginRight: 15,
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   levelTitle: {
     fontSize: 16,
